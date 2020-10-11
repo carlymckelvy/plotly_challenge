@@ -1,67 +1,86 @@
-function handleSubmit() {
-    // Prevent the page from refreshing
-    d3.event.preventDefault();
-  
-    // Select the input value from the form
-    var stock = d3.select("#selDataset").node().value;
-    console.log(stock);
-  
-    // clear the input value
-    d3.select("#selDataset").node().value = "";
-  
-    // Build the plot with the new stock
-    buildPlot(otu);
-  }
-  
-  function buildPlot(otu) {
-  
-    d3.json("StarterCode/samples.json").then(function(data) {
-      // Grab values from the response json object to build the plots
-        console.log(data)
-  
-      var name = StarterCode.samples.names;
-      var sample_values = StarterCode.samples.samples;
-      var otu_ids = max(StarterCode.samples.otu_ids, 10);
-      var otu_labels = StarterCode.samples.otu_labels;
+// Use D3 fetch to read the JSON file
+// The data from the JSON file is arbitrarily named importedData as the argument
+// function init() {
 
-      // Print the names of the columns
-      console.log(data.dataset.column_names);
-      // Print the data for each day
-      console.log(data.dataset.data);
-      var dates = data.dataset.data.map(row => row[0]);
-      // console.log(dates);
-      var closingPrices = data.dataset.data.map(row => row[4]);
-      // console.log(closingPrices);
-  
-      var trace1 = {
-        type: "scatter",
-        mode: "lines",
-        name: name,
-        x: dates,
-        y: closingPrices,
-        line: {
-          color: "#17BECF"
-        }
-      };
-  
-      var data = [trace1];
-  
-      var layout = {
-        title: `${stock} closing prices`,
-        xaxis: {
-          range: [startDate, endDate],
-          type: "date"
-        },
-        yaxis: {
-          autorange: true,
-          type: "linear"
-        }
-      };
-  
-      Plotly.newPlot("plot", data, layout);
-  
+  d3.json("../../data/samples.json").then((importedData) => {
+    // console.log(importedData);
+    //Assign variables to data components to be used
+    var data = importedData;
+    var names = data.names;
+    var samples = data.samples;
+    var metadata = data.metadata;
+    var otuIDs = samples[0].otu_ids;
+    var topOtuIDs = otuIDs.slice(0, 10);
+    var otuLabels = data.samples[0].otu_labels;
+    var topOTUlabels = otuLabels.slice(0, 10);
+    var sampleValues = data.samples[0].sample_values;
+    var topSampleValues = sampleValues.slice(0, 10);
+    // console.log(samples);
+
+    // Use D3 to select the dropdown menu
+    var dropdownMenu = d3.select("#selDataset");
+
+    names.forEach((nameID) => {
+      dropdownMenu
+        .append('option')
+        .text(nameID)
+        .property('value', nameID)
     });
-  }
+    // Assign the value of the dropdown menu option to a variable
+    var dataset = dropdownMenu.node().value;
+
+    //Bar chart
+
+    var otuIDtext = topOtuIDs.map(otuid => "OTU" + " " + otuid)
+
+    var trace1 = {
+      type: "bar",
+      x: topSampleValues.reverse(),
+      y: otuIDtext.reverse(),
+      text: topOTUlabels.reverse(),
+      orientation: "h"
+    };
+
+    var data1 = [trace1];
+
+    var layout1 = {
+      title: "Top Ten OTUs Found in Subject Belly Button",
+      xaxis: {title: "Sample Values"},
+      }
+
+    Plotly.newPlot("bar", data1, layout1);
+
+    //Metadata Chart
+
+    // console.log(metadata[0]);
   
-  // Add event listener for submit button
-  d3.select("#submit").on("click", handleSubmit);
+    d3.select("#sample-metadata").append("h5").text("ID: "+ metadata[0].id);
+    d3.select("#sample-metadata").append("h5").text("Ethnicity: " + metadata[0].ethnicity);
+    d3.select("#sample-metadata").append("h5").text("Gender: " + metadata[0].gender);
+    d3.select("#sample-metadata").append("h5").text("Age: " + metadata[0].age);
+    d3.select("#sample-metadata").append("h5").text("Location: " + metadata[0].location);
+    d3.select("#sample-metadata").append("h5").text("Belly Button Type: " + metadata[0].bbtype);
+    d3.select("#sample-metadata").append("h5").text("Washing Frequency: " + metadata[0].wfreq);
+
+    //Bubble Chart
+    
+    var trace2 = {
+      x: topOtuIDs,
+      y: topSampleValues,
+      mode: "markers",
+      text: topOTUlabels,
+      marker: {
+        size: topSampleValues,
+        color: topOtuIDs,
+        }};
+
+    var data2 = [trace2];
+      
+    var layout2 = {
+      showlegend: false,
+    }
+    
+    Plotly.newPlot("bubble", data2, layout2);
+
+});
+
