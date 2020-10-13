@@ -78,7 +78,7 @@ var trace2 = {
     color: topOtuIDs,
     }};
 
-//data
+    //data
     var data2 = [trace2];
   
 //Format bubble plot layout
@@ -88,6 +88,23 @@ var trace2 = {
 
 // Render the plot to the div tag with id "bubble"
 Plotly.newPlot("bubble", data2, layout2);
+
+//////Gauge//////
+
+var data3 = [
+	{
+		domain: { x: [0, 1], y: [0, 1] },
+		value: metadata[0].wfreq,
+		title: { text: "Subject Belly Button Scrubs Per Week" },
+		type: "indicator",
+    mode: "gauge+number",
+    gauge: { axis: { range: [null, 10] } }
+	}
+];
+
+var layout3 = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+
+Plotly.newPlot('gauge', data3, layout3);
 
 //////Update page on dropdown menu change//////
 
@@ -166,6 +183,23 @@ Plotly.newPlot("bubble", data2, layout2);
 
       // Render the plot to the div tag with id "bubble"
       Plotly.newPlot("bubble", data2, layout2);
+
+    //////Re-plot Gauge//////
+
+      var data3 = [
+        {
+          domain: { x: [0, 1], y: [0, 1] },
+          value: metadata[chooseNameID].wfreq,
+          title: { text: "Scrubs Per Week" },
+          type: "indicator",
+          mode: "gauge+number",
+          gauge: { axis: { range: [null, 10] } }
+        }
+      ];
+
+      var layout3 = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+
+      Plotly.newPlot('gauge', data3, layout3);
 
   }});
 
