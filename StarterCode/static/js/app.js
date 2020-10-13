@@ -13,7 +13,7 @@ var otuLabels = data.samples[0].otu_labels;
 var topOTUlabels = otuLabels.slice(0, 10);
 var sampleValues = data.samples[0].sample_values;
 var topSampleValues = sampleValues.slice(0, 10);
-// console.log(samples);
+// console.log(topOtuIDs);
 
 // Use D3 to select the dropdown menus
 var dropdownMenu = d3.select("#selDataset");
@@ -83,23 +83,19 @@ var trace2 = {
   
 //Format bubble plot layout
     var layout2 = {
-  showlegend: false,
+     showlegend: false,
 }
 
 // Render the plot to the div tag with id "bubble"
 Plotly.newPlot("bubble", data2, layout2);
 
-});
-
-  //////Update page on dropdown menu change//////
-
-function init() {
+//////Update page on dropdown menu change//////
 
   // Call updatePlotly() when a change takes place to the DOM
   d3.selectAll("#selDataset").on("change", optionChanged);
 
   // This function is called when a dropdown menu item is selected
-  function optionChangedy(newID) {
+  function optionChanged() {
     
     // Use D3 to select the dropdown menu
     var dropdownMenu = d3.select("#selDataset");
@@ -111,29 +107,32 @@ function init() {
     var chooseNameID = names.indexOf(dataset);
 
     //Adding variables for indexed data
-    var selectOtuIDs = topOtuIDs[chooseNameID].otu_ids;
-    var selectOtuLabels = topOtuIDs[chooseNameID].otu_labels;
-    var selectSampleValues = topSampleValues[chooseNameID].sample_values;
+    var selectOtuIDs = samples[chooseNameID].otu_ids;
+    var selectOtuLabels = data.samples[chooseNameID].otu_labels;
+    var selectSampleValues = data.samples[chooseNameID].sample_values;
 
-    console.log(selectOtuIDs);
+    var topSelectOtuIDs = selectOtuIDs.slice(0,10);
+    var topSelectOtuLabels = selectOtuLabels.slice(0,10);;
+    var topSelectSampleValues = selectSampleValues.slice(0,10);
 
-    var selectIDtext = selectOtuIDs.map(otuid => "OTU" + " " + otuid);
+    // console.log(topSelectOtuIDs);
 
-      //Variables for bar chart
-      x = selectSampleValues.reverse();
-      y = selectIDtext.reverse();
-      text = selectOtuLabels.reverse();
+    var topSelectIDtext = topSelectOtuIDs.map(otuid => "OTU" + " " + otuid);
 
-      //Restyle bar chart
-      Plotly.restyle("bar", "x", [x]);
-      Plotly.restyle("bar", "y", [y]);  
-      Plotly.restyle("bar", "text", [text]);
+    //Variables for bar chart
+    x = topSelectSampleValues.reverse();
+    y = topSelectIDtext.reverse();
+    text = topSelectOtuLabels.reverse();
 
+    //Restyle bar chart
+    Plotly.restyle("bar", "x", [x]);
+    Plotly.restyle("bar", "y", [y]);  
+    Plotly.restyle("bar", "text", [text]);
     
   //////Restyle Metadata Chart//////
 
     //Clear metadata first
-    d3.select("#sample-metadata").append("h5").remove();
+    d3.select("#sample-metadata").html("");
 
     d3.select("#sample-metadata").append("h5").text("ID: "+ metadata[chooseNameID].id);
     d3.select("#sample-metadata").append("h5").text("Ethnicity: " + metadata[chooseNameID].ethnicity);
@@ -168,8 +167,8 @@ function init() {
       // Render the plot to the div tag with id "bubble"
       Plotly.newPlot("bubble", data2, layout2);
 
-  }}
+  }});
 
-init();
+
 
 
