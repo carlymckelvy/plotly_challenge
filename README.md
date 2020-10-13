@@ -4,6 +4,4 @@ I began this project by building all plots based on the first subject listed in 
 
 When everything was functioning correctly, I uploaded the final files to GitHub for deployment to GitHub pages.  At this point, I struggled with the data file being accessible, so decided to reorganize the files slightly, which solved the problem.  
 
-<p align="center">
-![Image](https://github.com/carlymckelvy/plotly_challenge/blob/main/Images/bacteria.jpg)
- </p>
+<img align="center">[Image](https://github.com/carlymckelvy/plotly_challenge/blob/main/Images/bacteria.jpg)</img>
