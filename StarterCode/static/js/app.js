@@ -1,5 +1,5 @@
 // Use D3 fetch to read the JSON file
-d3.json("../../data/samples.json").then((importedData) => {
+d3.json("../StarterCode/samples.json").then((importedData) => {
 // console.log(importedData);
 
 //Assign variables to data components to be used
