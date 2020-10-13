@@ -24,8 +24,6 @@ names.forEach((nameID) => {
     .text(nameID)
     .property('value', nameID)
 });
-// Assign the value of the dropdown menu option to a variable
-// var dataset = dropdownMenu.node().value;
 
 //////Bar chart//////
 
